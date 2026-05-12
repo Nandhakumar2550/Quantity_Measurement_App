@@ -5,8 +5,10 @@ public class QuantityMeasurementApp {
     // Enum for Units
     enum LengthUnit {
 
-        FEET(1.0),
-        INCH(1.0 / 12);
+        INCHES(1.0),
+        FEET(12.0),
+        YARDS(36.0),
+        CENTIMETERS(0.393701);
 
         private final double conversionFactor;
 
@@ -36,8 +38,9 @@ public class QuantityMeasurementApp {
             this.unit = unit;
         }
 
-        // Convert into feet
+        // Convert to inches
         public double toBaseUnit() {
+
             return value *
                     unit.getConversionFactor();
         }
@@ -64,30 +67,29 @@ public class QuantityMeasurementApp {
         }
     }
 
-    // Main Method
     public static void main(String[] args) {
 
         QuantityLength q1 =
                 new QuantityLength(
                         1.0,
-                        LengthUnit.FEET);
+                        LengthUnit.YARDS);
 
         QuantityLength q2 =
                 new QuantityLength(
-                        12.0,
-                        LengthUnit.INCH);
+                        3.0,
+                        LengthUnit.FEET);
 
         System.out.println(q1.equals(q2));
 
         QuantityLength q3 =
                 new QuantityLength(
                         1.0,
-                        LengthUnit.INCH);
+                        LengthUnit.CENTIMETERS);
 
         QuantityLength q4 =
                 new QuantityLength(
-                        1.0,
-                        LengthUnit.INCH);
+                        0.393701,
+                        LengthUnit.INCHES);
 
         System.out.println(q3.equals(q4));
     }
