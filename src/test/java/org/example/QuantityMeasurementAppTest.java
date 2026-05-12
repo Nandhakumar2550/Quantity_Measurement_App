@@ -7,27 +7,35 @@ import static org.junit.jupiter.api.Assertions.*;
 public class QuantityMeasurementAppTest {
 
     @Test
-    public void testEquality_SameValue() {
+    public void testFeetEquality_SameValue() {
 
-        QuantityMeasurementApp.Feet f1 =
-                new QuantityMeasurementApp.Feet(1.0);
-
-        QuantityMeasurementApp.Feet f2 =
-                new QuantityMeasurementApp.Feet(1.0);
-
-        assertTrue(f1.equals(f2));
+        assertTrue(
+                QuantityMeasurementApp
+                        .checkFeetEquality(1.0, 1.0));
     }
 
     @Test
-    public void testEquality_DifferentValue() {
+    public void testFeetEquality_DifferentValue() {
 
-        QuantityMeasurementApp.Feet f1 =
-                new QuantityMeasurementApp.Feet(1.0);
+        assertFalse(
+                QuantityMeasurementApp
+                        .checkFeetEquality(1.0, 2.0));
+    }
 
-        QuantityMeasurementApp.Feet f2 =
-                new QuantityMeasurementApp.Feet(2.0);
+    @Test
+    public void testInchesEquality_SameValue() {
 
-        assertFalse(f1.equals(f2));
+        assertTrue(
+                QuantityMeasurementApp
+                        .checkInchesEquality(1.0, 1.0));
+    }
+
+    @Test
+    public void testInchesEquality_DifferentValue() {
+
+        assertFalse(
+                QuantityMeasurementApp
+                        .checkInchesEquality(1.0, 2.0));
     }
 
     @Test
@@ -42,10 +50,10 @@ public class QuantityMeasurementAppTest {
     @Test
     public void testEquality_NonNumericInput() {
 
-        QuantityMeasurementApp.Feet f1 =
-                new QuantityMeasurementApp.Feet(1.0);
+        QuantityMeasurementApp.Inches i1 =
+                new QuantityMeasurementApp.Inches(1.0);
 
-        assertFalse(f1.equals("abc"));
+        assertFalse(i1.equals("abc"));
     }
 
     @Test
