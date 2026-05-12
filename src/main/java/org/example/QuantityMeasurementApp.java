@@ -5,6 +5,7 @@ public class QuantityMeasurementApp {
 
     // ENUM FOR LENGTH UNITS
 
+
     enum LengthUnit {
 
         INCHES(1.0),
@@ -24,7 +25,8 @@ public class QuantityMeasurementApp {
     }
 
 
-    // GENERIC QUANTITY LENGTH CLASS
+    // QUANTITY LENGTH CLASS
+
 
     static class QuantityLength {
 
@@ -49,7 +51,19 @@ public class QuantityMeasurementApp {
             this.unit = unit;
         }
 
-        // Convert to base unit (INCHES)
+        // Getter Methods
+        public double getValue() {
+            return value;
+        }
+
+        public LengthUnit getUnit() {
+            return unit;
+        }
+
+
+        // CONVERT TO BASE UNIT (INCHES)
+
+
         private double toBaseUnit() {
 
             return value *
@@ -81,6 +95,7 @@ public class QuantityMeasurementApp {
 
         // INSTANCE CONVERSION METHOD
 
+
         public QuantityLength convertTo(
                 LengthUnit targetUnit) {
 
@@ -96,28 +111,120 @@ public class QuantityMeasurementApp {
         }
 
 
+        // ADDITION METHOD
+
+
+        public QuantityLength add(
+                QuantityLength other) {
+
+            if (other == null)
+                throw new IllegalArgumentException(
+                        "Second operand cannot be null");
+
+            // Convert both to base unit
+            double firstBase =
+                    this.toBaseUnit();
+
+            double secondBase =
+                    other.toBaseUnit();
+
+            // Add base values
+            double sumBase =
+                    firstBase + secondBase;
+
+            // Convert result back to unit
+            double resultValue =
+                    sumBase /
+                            this.unit.getConversionFactor();
+
+            return new QuantityLength(
+                    resultValue,
+                    this.unit);
+        }
+
+
+        // STATIC ADD METHOD
+
+        public static QuantityLength add(
+                QuantityLength first,
+                QuantityLength second,
+                LengthUnit targetUnit) {
+
+            if (first == null || second == null)
+                throw new IllegalArgumentException(
+                        "Operands cannot be null");
+
+            if (targetUnit == null)
+                throw new IllegalArgumentException(
+                        "Target unit cannot be null");
+
+            // Convert to base unit
+            double firstBase =
+                    first.toBaseUnit();
+
+            double secondBase =
+                    second.toBaseUnit();
+
+            // Add values
+            double sumBase =
+                    firstBase + secondBase;
+
+            // Convert to target unit
+            double resultValue =
+                    sumBase /
+                            targetUnit.getConversionFactor();
+
+            return new QuantityLength(
+                    resultValue,
+                    targetUnit);
+        }
+
+
+        // OVERLOADED ADD METHOD
+
+
+        public static QuantityLength add(
+                double value1,
+                LengthUnit unit1,
+                double value2,
+                LengthUnit unit2,
+                LengthUnit targetUnit) {
+
+            QuantityLength q1 =
+                    new QuantityLength(
+                            value1,
+                            unit1);
+
+            QuantityLength q2 =
+                    new QuantityLength(
+                            value2,
+                            unit2);
+
+            return add(
+                    q1,
+                    q2,
+                    targetUnit);
+        }
+
+
         // EQUALS METHOD
 
 
         @Override
         public boolean equals(Object obj) {
 
-            // Same reference
             if (this == obj)
                 return true;
 
-            // Null check
             if (obj == null)
                 return false;
 
-            // Type check
             if (getClass() != obj.getClass())
                 return false;
 
             QuantityLength measurement =
                     (QuantityLength) obj;
 
-            // Floating-point comparison
             double difference =
                     Math.abs(
                             this.toBaseUnit() -
@@ -133,122 +240,55 @@ public class QuantityMeasurementApp {
         @Override
         public String toString() {
 
-            return value + " " + unit;
+            return "Quantity(" +
+                    value +
+                    ", " +
+                    unit +
+                    ")";
         }
     }
 
 
-    // METHOD OVERLOADING
-
-    // Method 1
-    public static void demonstrateLengthConversion(
-            double value,
-            LengthUnit from,
-            LengthUnit to) {
-
-        double result =
-                QuantityLength.convert(
-                        value,
-                        from,
-                        to);
-
-        System.out.println(
-                value + " " + from +
-                        " = " +
-                        result + " " + to);
-    }
-
-    // Method 2
-    public static void demonstrateLengthConversion(
-            QuantityLength quantity,
-            LengthUnit target) {
-
-        QuantityLength converted =
-                quantity.convertTo(target);
-
-        System.out.println(
-                quantity +
-                        " = " +
-                        converted);
-    }
-
-    // EQUALITY DEMONSTRATION
+    // DEMONSTRATION METHODS
 
 
-    public static void demonstrateLengthEquality(
+    public static void demonstrateLengthAddition(
             QuantityLength q1,
             QuantityLength q2) {
 
+        QuantityLength result =
+                q1.add(q2);
+
         System.out.println(
-                q1 + " equals " + q2 +
-                        " : " +
-                        q1.equals(q2));
+                q1 + " + " +
+                        q2 + " = " +
+                        result);
     }
 
-    // COMPARISON DEMONSTRATION
-
-    public static void demonstrateLengthComparison(
+    public static void demonstrateLengthAddition(
             double value1,
             LengthUnit unit1,
             double value2,
-            LengthUnit unit2) {
+            LengthUnit unit2,
+            LengthUnit targetUnit) {
 
-        QuantityLength q1 =
-                new QuantityLength(
+        QuantityLength result =
+                QuantityLength.add(
                         value1,
-                        unit1);
-
-        QuantityLength q2 =
-                new QuantityLength(
+                        unit1,
                         value2,
-                        unit2);
+                        unit2,
+                        targetUnit);
 
-        demonstrateLengthEquality(q1, q2);
+        System.out.println(
+                "Result : " + result);
     }
+
 
     // MAIN METHOD
 
+
     public static void main(String[] args) {
-
-
-        // CONVERSION TESTS
-
-
-        demonstrateLengthConversion(
-                1.0,
-                LengthUnit.FEET,
-                LengthUnit.INCHES);
-
-        demonstrateLengthConversion(
-                3.0,
-                LengthUnit.YARDS,
-                LengthUnit.FEET);
-
-        demonstrateLengthConversion(
-                36.0,
-                LengthUnit.INCHES,
-                LengthUnit.YARDS);
-
-        demonstrateLengthConversion(
-                2.54,
-                LengthUnit.CENTIMETERS,
-                LengthUnit.INCHES);
-
-        // INSTANCE CONVERSION
-
-
-        QuantityLength q1 =
-                new QuantityLength(
-                        36.0,
-                        LengthUnit.INCHES);
-
-        demonstrateLengthConversion(
-                q1,
-                LengthUnit.YARDS);
-
-
-        // EQUALITY TESTS
-
 
         QuantityLength feet =
                 new QuantityLength(
@@ -260,7 +300,7 @@ public class QuantityMeasurementApp {
                         12.0,
                         LengthUnit.INCHES);
 
-        demonstrateLengthEquality(
+        demonstrateLengthAddition(
                 feet,
                 inches);
 
@@ -274,7 +314,7 @@ public class QuantityMeasurementApp {
                         3.0,
                         LengthUnit.FEET);
 
-        demonstrateLengthEquality(
+        demonstrateLengthAddition(
                 yard,
                 feet3);
 
@@ -288,7 +328,7 @@ public class QuantityMeasurementApp {
                         1.0,
                         LengthUnit.INCHES);
 
-        demonstrateLengthEquality(
+        demonstrateLengthAddition(
                 cm,
                 inch);
     }
