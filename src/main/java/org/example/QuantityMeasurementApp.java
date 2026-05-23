@@ -2,26 +2,6 @@ package org.example;
 
 public class QuantityMeasurementApp {
 
-    // ENUM FOR LENGTH UNITS
-
-    enum LengthUnit {
-
-        INCHES(1.0),
-        FEET(12.0),
-        YARDS(36.0),
-        CENTIMETERS(0.393701);
-
-        private final double conversionFactor;
-
-        LengthUnit(double conversionFactor) {
-            this.conversionFactor = conversionFactor;
-        }
-
-        public double getConversionFactor() {
-            return conversionFactor;
-        }
-    }
-
     // QUANTITY LENGTH CLASS
 
     static class QuantityLength {
@@ -62,54 +42,39 @@ public class QuantityMeasurementApp {
 
         private double toBaseUnit() {
 
-            return value *
-                    unit.getConversionFactor();
+            return unit.convertToBaseUnit(value);
         }
 
-        // STATIC CONVERSION METHOD
-
-        public static double convert(
-                double value,
-                LengthUnit source,
-                LengthUnit target) {
-
-            if (!Double.isFinite(value))
-                throw new IllegalArgumentException(
-                        "Invalid value");
-
-            if (source == null || target == null)
-                throw new IllegalArgumentException(
-                        "Unit cannot be null");
-
-            return value *
-                    (source.getConversionFactor()
-                            / target.getConversionFactor());
-        }
-
-        // INSTANCE CONVERSION METHOD
+        // CONVERT TO TARGET UNIT
 
         public QuantityLength convertTo(
                 LengthUnit targetUnit) {
 
+            double baseValue =
+                    unit.convertToBaseUnit(value);
+
             double convertedValue =
-                    convert(
-                            this.value,
-                            this.unit,
-                            targetUnit);
+                    targetUnit.convertFromBaseUnit(
+                            baseValue);
 
             return new QuantityLength(
                     convertedValue,
                     targetUnit);
         }
 
-        // UC6 ADD METHOD
+        // ADD METHOD
 
         public QuantityLength add(
-                QuantityLength other) {
+                QuantityLength other,
+                LengthUnit targetUnit) {
 
             if (other == null)
                 throw new IllegalArgumentException(
-                        "Second operand cannot be null");
+                        "Operand cannot be null");
+
+            if (targetUnit == null)
+                throw new IllegalArgumentException(
+                        "Target unit cannot be null");
 
             double firstBase =
                     this.toBaseUnit();
@@ -121,73 +86,11 @@ public class QuantityMeasurementApp {
                     firstBase + secondBase;
 
             double resultValue =
-                    sumBase /
-                            this.unit.getConversionFactor();
+                    targetUnit.convertFromBaseUnit(
+                            sumBase);
 
             return new QuantityLength(
                     resultValue,
-                    this.unit);
-        }
-
-        // PRIVATE UTILITY METHOD
-
-        private static double addBaseValues(
-                QuantityLength first,
-                QuantityLength second) {
-
-            return first.toBaseUnit() +
-                    second.toBaseUnit();
-        }
-
-        // UC7 ADD METHOD
-
-        public static QuantityLength add(
-                QuantityLength first,
-                QuantityLength second,
-                LengthUnit targetUnit) {
-
-            if (first == null || second == null)
-                throw new IllegalArgumentException(
-                        "Operands cannot be null");
-
-            if (targetUnit == null)
-                throw new IllegalArgumentException(
-                        "Target unit cannot be null");
-
-            double sumBase =
-                    addBaseValues(first, second);
-
-            double resultValue =
-                    sumBase /
-                            targetUnit.getConversionFactor();
-
-            return new QuantityLength(
-                    resultValue,
-                    targetUnit);
-        }
-
-        // OVERLOADED ADD METHOD
-
-        public static QuantityLength add(
-                double value1,
-                LengthUnit unit1,
-                double value2,
-                LengthUnit unit2,
-                LengthUnit targetUnit) {
-
-            QuantityLength q1 =
-                    new QuantityLength(
-                            value1,
-                            unit1);
-
-            QuantityLength q2 =
-                    new QuantityLength(
-                            value2,
-                            unit2);
-
-            return add(
-                    q1,
-                    q2,
                     targetUnit);
         }
 
@@ -205,13 +108,13 @@ public class QuantityMeasurementApp {
             if (getClass() != obj.getClass())
                 return false;
 
-            QuantityLength measurement =
+            QuantityLength other =
                     (QuantityLength) obj;
 
             double difference =
                     Math.abs(
                             this.toBaseUnit() -
-                                    measurement.toBaseUnit());
+                                    other.toBaseUnit());
 
             return difference < EPSILON;
         }
@@ -233,88 +136,85 @@ public class QuantityMeasurementApp {
 
     public static void main(String[] args) {
 
-        QuantityLength result1 =
-                QuantityLength.add(
-                        new QuantityLength(
-                                1.0,
-                                LengthUnit.FEET),
-
-                        new QuantityLength(
-                                12.0,
-                                LengthUnit.INCHES),
-
+        QuantityLength feet =
+                new QuantityLength(
+                        1.0,
                         LengthUnit.FEET);
 
-        System.out.println(result1);
-
-        QuantityLength result2 =
-                QuantityLength.add(
-                        new QuantityLength(
-                                1.0,
-                                LengthUnit.FEET),
-
-                        new QuantityLength(
-                                12.0,
-                                LengthUnit.INCHES),
-
+        QuantityLength inches =
+                new QuantityLength(
+                        12.0,
                         LengthUnit.INCHES);
 
-        System.out.println(result2);
-
-        QuantityLength result3 =
-                QuantityLength.add(
-                        new QuantityLength(
-                                1.0,
-                                LengthUnit.FEET),
-
-                        new QuantityLength(
-                                12.0,
-                                LengthUnit.INCHES),
-
+        QuantityLength yards =
+                new QuantityLength(
+                        1.0,
                         LengthUnit.YARDS);
 
-        System.out.println(result3);
+        QuantityLength centimeters =
+                new QuantityLength(
+                        2.54,
+                        LengthUnit.CENTIMETERS);
 
-        QuantityLength result4 =
-                QuantityLength.add(
-                        new QuantityLength(
-                                1.0,
-                                LengthUnit.YARDS),
+        // CONVERSION
 
+        System.out.println(
+                feet.convertTo(
+                        LengthUnit.INCHES));
+
+        // ADDITION
+
+        System.out.println(
+                feet.add(
+                        inches,
+                        LengthUnit.FEET));
+
+        // EQUALITY
+
+        System.out.println(
+                new QuantityLength(
+                        36.0,
+                        LengthUnit.INCHES)
+                        .equals(
+                                new QuantityLength(
+                                        1.0,
+                                        LengthUnit.YARDS)));
+
+        // YARD + FEET
+
+        System.out.println(
+                yards.add(
                         new QuantityLength(
                                 3.0,
                                 LengthUnit.FEET),
+                        LengthUnit.YARDS));
 
-                        LengthUnit.YARDS);
+        // CM TO INCHES
 
-        System.out.println(result4);
+        System.out.println(
+                centimeters.convertTo(
+                        LengthUnit.INCHES));
 
-        QuantityLength result5 =
-                QuantityLength.add(
-                        new QuantityLength(
-                                36.0,
-                                LengthUnit.INCHES),
+        // ADD WITH ZERO
 
-                        new QuantityLength(
-                                1.0,
-                                LengthUnit.YARDS),
+        System.out.println(
+                new QuantityLength(
+                        5.0,
+                        LengthUnit.FEET)
+                        .add(
+                                new QuantityLength(
+                                        0.0,
+                                        LengthUnit.INCHES),
+                                LengthUnit.FEET));
 
-                        LengthUnit.FEET);
+        // ENUM CONVERSION METHODS
 
-        System.out.println(result5);
+        System.out.println(
+                LengthUnit.FEET
+                        .convertToBaseUnit(12.0));
 
-        QuantityLength result6 =
-                QuantityLength.add(
-                        new QuantityLength(
-                                2.54,
-                                LengthUnit.CENTIMETERS),
-
-                        new QuantityLength(
-                                1.0,
-                                LengthUnit.INCHES),
-
-                        LengthUnit.CENTIMETERS);
-
-        System.out.println(result6);
+        System.out.println(
+                LengthUnit.INCHES
+                        .convertToBaseUnit(12.0));
     }
 }
