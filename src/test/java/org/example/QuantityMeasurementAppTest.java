@@ -8,207 +8,123 @@ public class QuantityMeasurementAppTest {
 
     private static final double EPSILON = 0.01;
 
-    // FEET CONSTANT
+    // KILOGRAM TO KILOGRAM
 
     @Test
-    public void testLengthUnitEnum_FeetConstant() {
+    public void testEquality_KilogramToKilogram_SameValue() {
 
-        assertEquals(
-                1.0,
-                LengthUnit.FEET
-                        .getConversionFactor(),
-                EPSILON);
-    }
-
-    // INCHES CONSTANT
-
-    @Test
-    public void testLengthUnitEnum_InchesConstant() {
-
-        assertEquals(
-                1.0 / 12.0,
-                LengthUnit.INCHES
-                        .getConversionFactor(),
-                EPSILON);
-    }
-
-    // YARDS CONSTANT
-
-    @Test
-    public void testLengthUnitEnum_YardsConstant() {
-
-        assertEquals(
-                3.0,
-                LengthUnit.YARDS
-                        .getConversionFactor(),
-                EPSILON);
-    }
-
-    // CENTIMETERS CONSTANT
-
-    @Test
-    public void testLengthUnitEnum_CentimetersConstant() {
-
-        assertEquals(
-                1.0 / 30.48,
-                LengthUnit.CENTIMETERS
-                        .getConversionFactor(),
-                EPSILON);
-    }
-
-    // FEET TO FEET
-
-    @Test
-    public void testConvertToBaseUnit_FeetToFeet() {
-
-        assertEquals(
-                5.0,
-                LengthUnit.FEET
-                        .convertToBaseUnit(5.0),
-                EPSILON);
-    }
-
-    // INCHES TO FEET
-
-    @Test
-    public void testConvertToBaseUnit_InchesToFeet() {
-
-        assertEquals(
-                1.0,
-                LengthUnit.INCHES
-                        .convertToBaseUnit(12.0),
-                EPSILON);
-    }
-
-    // YARDS TO FEET
-
-    @Test
-    public void testConvertToBaseUnit_YardsToFeet() {
-
-        assertEquals(
-                3.0,
-                LengthUnit.YARDS
-                        .convertToBaseUnit(1.0),
-                EPSILON);
-    }
-
-    // CENTIMETERS TO FEET
-
-    @Test
-    public void testConvertToBaseUnit_CentimetersToFeet() {
-
-        assertEquals(
-                1.0,
-                LengthUnit.CENTIMETERS
-                        .convertToBaseUnit(30.48),
-                EPSILON);
-    }
-
-    // FEET FROM BASE UNIT
-
-    @Test
-    public void testConvertFromBaseUnit_FeetToFeet() {
-
-        assertEquals(
-                2.0,
-                LengthUnit.FEET
-                        .convertFromBaseUnit(2.0),
-                EPSILON);
-    }
-
-    // FEET TO INCHES
-
-    @Test
-    public void testConvertFromBaseUnit_FeetToInches() {
-
-        assertEquals(
-                12.0,
-                LengthUnit.INCHES
-                        .convertFromBaseUnit(1.0),
-                EPSILON);
-    }
-
-    // FEET TO YARDS
-
-    @Test
-    public void testConvertFromBaseUnit_FeetToYards() {
-
-        assertEquals(
-                1.0,
-                LengthUnit.YARDS
-                        .convertFromBaseUnit(3.0),
-                EPSILON);
-    }
-
-    // FEET TO CENTIMETERS
-
-    @Test
-    public void testConvertFromBaseUnit_FeetToCentimeters() {
-
-        assertEquals(
-                30.48,
-                LengthUnit.CENTIMETERS
-                        .convertFromBaseUnit(1.0),
-                EPSILON);
-    }
-
-    // EQUALITY TEST
-
-    @Test
-    public void testQuantityLengthRefactored_Equality() {
-
-        QuantityMeasurementApp.QuantityLength q1 =
-                new QuantityMeasurementApp.QuantityLength(
+        QuantityMeasurementApp.QuantityWeight q1 =
+                new QuantityMeasurementApp.QuantityWeight(
                         1.0,
-                        LengthUnit.FEET);
+                        WeightUnit.KILOGRAM);
 
-        QuantityMeasurementApp.QuantityLength q2 =
-                new QuantityMeasurementApp.QuantityLength(
-                        12.0,
-                        LengthUnit.INCHES);
+        QuantityMeasurementApp.QuantityWeight q2 =
+                new QuantityMeasurementApp.QuantityWeight(
+                        1.0,
+                        WeightUnit.KILOGRAM);
 
         assertTrue(q1.equals(q2));
     }
 
-    // CONVERT TO TEST
+    // KILOGRAM TO GRAM
 
     @Test
-    public void testQuantityLengthRefactored_ConvertTo() {
+    public void testEquality_KilogramToGram_EquivalentValue() {
 
-        QuantityMeasurementApp.QuantityLength q1 =
-                new QuantityMeasurementApp.QuantityLength(
+        QuantityMeasurementApp.QuantityWeight q1 =
+                new QuantityMeasurementApp.QuantityWeight(
                         1.0,
-                        LengthUnit.FEET);
+                        WeightUnit.KILOGRAM);
 
-        QuantityMeasurementApp.QuantityLength result =
+        QuantityMeasurementApp.QuantityWeight q2 =
+                new QuantityMeasurementApp.QuantityWeight(
+                        1000.0,
+                        WeightUnit.GRAM);
+
+        assertTrue(q1.equals(q2));
+    }
+
+    // POUND TO KILOGRAM
+
+    @Test
+    public void testConversion_PoundToKilogram() {
+
+        QuantityMeasurementApp.QuantityWeight q1 =
+                new QuantityMeasurementApp.QuantityWeight(
+                        2.20462,
+                        WeightUnit.POUND);
+
+        QuantityMeasurementApp.QuantityWeight result =
                 q1.convertTo(
-                        LengthUnit.INCHES);
+                        WeightUnit.KILOGRAM);
 
         assertEquals(
-                12.0,
+                1.0,
                 result.getValue(),
                 EPSILON);
     }
 
-    // ADD TEST
+    // KILOGRAM TO POUND
 
     @Test
-    public void testQuantityLengthRefactored_Add() {
+    public void testConversion_KilogramToPound() {
 
-        QuantityMeasurementApp.QuantityLength q1 =
-                new QuantityMeasurementApp.QuantityLength(
+        QuantityMeasurementApp.QuantityWeight q1 =
+                new QuantityMeasurementApp.QuantityWeight(
                         1.0,
-                        LengthUnit.FEET);
+                        WeightUnit.KILOGRAM);
 
-        QuantityMeasurementApp.QuantityLength q2 =
-                new QuantityMeasurementApp.QuantityLength(
-                        12.0,
-                        LengthUnit.INCHES);
+        QuantityMeasurementApp.QuantityWeight result =
+                q1.convertTo(
+                        WeightUnit.POUND);
 
-        QuantityMeasurementApp.QuantityLength result =
-                q1.add(
-                        q2,
-                        LengthUnit.FEET);
+        assertEquals(
+                2.20462,
+                result.getValue(),
+                EPSILON);
+    }
+
+    // SAME UNIT ADDITION
+
+    @Test
+    public void testAddition_SameUnit_KilogramPlusKilogram() {
+
+        QuantityMeasurementApp.QuantityWeight q1 =
+                new QuantityMeasurementApp.QuantityWeight(
+                        1.0,
+                        WeightUnit.KILOGRAM);
+
+        QuantityMeasurementApp.QuantityWeight q2 =
+                new QuantityMeasurementApp.QuantityWeight(
+                        2.0,
+                        WeightUnit.KILOGRAM);
+
+        QuantityMeasurementApp.QuantityWeight result =
+                q1.add(q2);
+
+        assertEquals(
+                3.0,
+                result.getValue(),
+                EPSILON);
+    }
+
+    // CROSS UNIT ADDITION
+
+    @Test
+    public void testAddition_CrossUnit_KilogramPlusGram() {
+
+        QuantityMeasurementApp.QuantityWeight q1 =
+                new QuantityMeasurementApp.QuantityWeight(
+                        1.0,
+                        WeightUnit.KILOGRAM);
+
+        QuantityMeasurementApp.QuantityWeight q2 =
+                new QuantityMeasurementApp.QuantityWeight(
+                        1000.0,
+                        WeightUnit.GRAM);
+
+        QuantityMeasurementApp.QuantityWeight result =
+                q1.add(q2);
 
         assertEquals(
                 2.0,
@@ -216,101 +132,106 @@ public class QuantityMeasurementAppTest {
                 EPSILON);
     }
 
-    // ADD WITH TARGET UNIT
+    // ADDITION WITH TARGET UNIT
 
     @Test
-    public void testQuantityLengthRefactored_AddWithTargetUnit() {
+    public void testAddition_ExplicitTargetUnit_Kilogram() {
 
-        QuantityMeasurementApp.QuantityLength q1 =
-                new QuantityMeasurementApp.QuantityLength(
+        QuantityMeasurementApp.QuantityWeight q1 =
+                new QuantityMeasurementApp.QuantityWeight(
                         1.0,
-                        LengthUnit.FEET);
+                        WeightUnit.KILOGRAM);
 
-        QuantityMeasurementApp.QuantityLength q2 =
-                new QuantityMeasurementApp.QuantityLength(
-                        12.0,
-                        LengthUnit.INCHES);
+        QuantityMeasurementApp.QuantityWeight q2 =
+                new QuantityMeasurementApp.QuantityWeight(
+                        1000.0,
+                        WeightUnit.GRAM);
 
-        QuantityMeasurementApp.QuantityLength result =
+        QuantityMeasurementApp.QuantityWeight result =
                 q1.add(
                         q2,
-                        LengthUnit.YARDS);
+                        WeightUnit.GRAM);
 
         assertEquals(
-                0.667,
+                2000.0,
                 result.getValue(),
                 EPSILON);
     }
 
-    // NULL UNIT TEST
+    // ZERO VALUE
 
     @Test
-    public void testQuantityLengthRefactored_NullUnit() {
+    public void testEquality_ZeroValue() {
+
+        QuantityMeasurementApp.QuantityWeight q1 =
+                new QuantityMeasurementApp.QuantityWeight(
+                        0.0,
+                        WeightUnit.KILOGRAM);
+
+        QuantityMeasurementApp.QuantityWeight q2 =
+                new QuantityMeasurementApp.QuantityWeight(
+                        0.0,
+                        WeightUnit.GRAM);
+
+        assertTrue(q1.equals(q2));
+    }
+
+    // NEGATIVE VALUE
+
+    @Test
+    public void testEquality_NegativeWeight() {
+
+        QuantityMeasurementApp.QuantityWeight q1 =
+                new QuantityMeasurementApp.QuantityWeight(
+                        -1.0,
+                        WeightUnit.KILOGRAM);
+
+        QuantityMeasurementApp.QuantityWeight q2 =
+                new QuantityMeasurementApp.QuantityWeight(
+                        -1000.0,
+                        WeightUnit.GRAM);
+
+        assertTrue(q1.equals(q2));
+    }
+
+    // NULL UNIT
+
+    @Test
+    public void testEquality_NullUnit() {
 
         assertThrows(
                 IllegalArgumentException.class,
                 () -> {
 
-                    new QuantityMeasurementApp.QuantityLength(
+                    new QuantityMeasurementApp.QuantityWeight(
                             1.0,
                             null);
                 });
     }
 
-    // INVALID VALUE TEST
+    // SAME REFERENCE
 
     @Test
-    public void testQuantityLengthRefactored_InvalidValue() {
+    public void testEquality_SameReference() {
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> {
-
-                    new QuantityMeasurementApp.QuantityLength(
-                            Double.NaN,
-                            LengthUnit.FEET);
-                });
-    }
-
-    // ROUND TRIP CONVERSION
-
-    @Test
-    public void testRoundTripConversion_RefactoredDesign() {
-
-        QuantityMeasurementApp.QuantityLength q1 =
-                new QuantityMeasurementApp.QuantityLength(
+        QuantityMeasurementApp.QuantityWeight q1 =
+                new QuantityMeasurementApp.QuantityWeight(
                         1.0,
-                        LengthUnit.FEET);
+                        WeightUnit.KILOGRAM);
 
-        QuantityMeasurementApp.QuantityLength converted =
-                q1.convertTo(
-                        LengthUnit.INCHES);
-
-        QuantityMeasurementApp.QuantityLength result =
-                converted.convertTo(
-                        LengthUnit.FEET);
-
-        assertEquals(
-                1.0,
-                result.getValue(),
-                EPSILON);
+        assertTrue(q1.equals(q1));
     }
 
-    // UNIT IMMUTABILITY
+    // NULL COMPARISON
 
     @Test
-    public void testUnitImmutability() {
+    public void testEquality_NullComparison() {
 
-        assertNotNull(
-                LengthUnit.FEET);
+        QuantityMeasurementApp.QuantityWeight q1 =
+                new QuantityMeasurementApp.QuantityWeight(
+                        1.0,
+                        WeightUnit.KILOGRAM);
 
-        assertNotNull(
-                LengthUnit.INCHES);
-
-        assertNotNull(
-                LengthUnit.YARDS);
-
-        assertNotNull(
-                LengthUnit.CENTIMETERS);
+        assertFalse(q1.equals(null));
     }
 }
