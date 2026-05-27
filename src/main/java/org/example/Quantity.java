@@ -125,6 +125,82 @@ public class Quantity<U extends IMeasurable> {
                 targetUnit);
     }
 
+    // SUBTRACT METHOD
+
+    public Quantity<U> subtract(
+            Quantity<U> other) {
+
+        if (other == null)
+            throw new IllegalArgumentException(
+                    "Operand cannot be null");
+
+        double differenceBase =
+                this.toBaseUnit() -
+                        other.toBaseUnit();
+
+        double resultValue =
+                unit.convertFromBaseUnit(
+                        differenceBase);
+
+        resultValue =
+                Math.round(resultValue * 100.0)
+                        / 100.0;
+
+        return new Quantity<>(
+                resultValue,
+                unit);
+    }
+
+    // SUBTRACT METHOD WITH TARGET UNIT
+
+    public Quantity<U> subtract(
+            Quantity<U> other,
+            U targetUnit) {
+
+        if (other == null)
+            throw new IllegalArgumentException(
+                    "Operand cannot be null");
+
+        if (targetUnit == null)
+            throw new IllegalArgumentException(
+                    "Target unit cannot be null");
+
+        double differenceBase =
+                this.toBaseUnit() -
+                        other.toBaseUnit();
+
+        double resultValue =
+                targetUnit.convertFromBaseUnit(
+                        differenceBase);
+
+        resultValue =
+                Math.round(resultValue * 100.0)
+                        / 100.0;
+
+        return new Quantity<>(
+                resultValue,
+                targetUnit);
+    }
+
+    // DIVIDE METHOD
+
+    public double divide(
+            Quantity<U> other) {
+
+        if (other == null)
+            throw new IllegalArgumentException(
+                    "Operand cannot be null");
+
+        double divisor =
+                other.toBaseUnit();
+
+        if (Math.abs(divisor) < EPSILON)
+            throw new ArithmeticException(
+                    "Cannot divide by zero");
+
+        return this.toBaseUnit() / divisor;
+    }
+
     // EQUALS METHOD
 
     @Override
