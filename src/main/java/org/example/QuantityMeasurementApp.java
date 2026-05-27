@@ -1,79 +1,52 @@
 package org.example;
 
 import org.example.controller.QuantityMeasurementController;
-
-import org.example.dto.QuantityDTO;
-
-import org.example.repository.QuantityMeasurementCacheRepository;
-
+import org.example.repository.IQuantityMeasurementRepository;
+import org.example.repository.QuantityMeasurementDatabaseRepository;
 import org.example.service.IQuantityMeasurementService;
-
 import org.example.service.QuantityMeasurementServiceImpl;
 
 public class QuantityMeasurementApp {
 
-    public static void main(
-            String[] args) {
+    public static void main(String[] args) {
 
-        // REPOSITORY
-
-        QuantityMeasurementCacheRepository
+        IQuantityMeasurementRepository
                 repository =
-                QuantityMeasurementCacheRepository
-                        .getInstance();
+                new QuantityMeasurementDatabaseRepository();
 
-        // SERVICE
-
-        IQuantityMeasurementService
-                service =
+        IQuantityMeasurementService service =
                 new QuantityMeasurementServiceImpl(
-                        repository);
+                        repository
+                );
 
-        // CONTROLLER
-
-        QuantityMeasurementController
-                controller =
+        QuantityMeasurementController controller =
                 new QuantityMeasurementController(
-                        service);
+                        service
+                );
 
-        // DTO OBJECTS
+        boolean compare =
+                controller.compare(10,10);
 
-        QuantityDTO feet1 =
-                new QuantityDTO(
-                        1.0,
-                        "FEET",
-                        "LENGTH");
+        double add =
+                controller.add(10,20);
 
-        QuantityDTO feet2 =
-                new QuantityDTO(
-                        1.0,
-                        "FEET",
-                        "LENGTH");
+        System.out.println(
+                "Compare Result : " + compare
+        );
 
-        QuantityDTO temperature1 =
-                new QuantityDTO(
-                        100.0,
-                        "CELSIUS",
-                        "TEMPERATURE");
+        System.out.println(
+                "Add Result : " + add
+        );
 
-        QuantityDTO temperature2 =
-                new QuantityDTO(
-                        50.0,
-                        "CELSIUS",
-                        "TEMPERATURE");
+        System.out.println(
+                "Total Records : " +
+                repository.getTotalCount()
+        );
 
-        // OPERATIONS
+        repository.deleteAll();
 
-        controller.performComparison(
-                feet1,
-                feet2);
-
-        controller.performAddition(
-                feet1,
-                feet2);
-
-        controller.performDivision(
-                temperature1,
-                temperature2);
+        System.out.println(
+                "UC16 PROJECT RUN SUCCESSFULLY"
+        );
     }
 }

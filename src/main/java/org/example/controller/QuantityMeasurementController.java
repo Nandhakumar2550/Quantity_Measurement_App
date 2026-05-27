@@ -1,75 +1,35 @@
 package org.example.controller;
 
-import org.example.dto.QuantityDTO;
-import org.example.entity.QuantityMeasurementEntity;
 import org.example.service.IQuantityMeasurementService;
 
 public class QuantityMeasurementController {
 
     private final
-    IQuantityMeasurementService
-            service;
+    IQuantityMeasurementService service;
 
-    public
-    QuantityMeasurementController(
-
-            IQuantityMeasurementService
-                    service) {
+    public QuantityMeasurementController(
+            IQuantityMeasurementService service) {
 
         this.service = service;
     }
 
-    public void performComparison(
-            QuantityDTO first,
-            QuantityDTO second) {
+    public boolean compare(
+            double value1,
+            double value2) {
 
-        QuantityMeasurementEntity
-                result =
-                service.compare(
-                        first,
-                        second);
-
-        displayResult(result);
+        return service.compare(
+                value1,
+                value2
+        );
     }
 
-    public void performAddition(
-            QuantityDTO first,
-            QuantityDTO second) {
+    public double add(
+            double value1,
+            double value2) {
 
-        QuantityMeasurementEntity
-                result =
-                service.add(
-                        first,
-                        second);
-
-        displayResult(result);
-    }
-
-    public void performDivision(
-            QuantityDTO first,
-            QuantityDTO second) {
-
-        try {
-
-            QuantityMeasurementEntity
-                    result =
-                    service.divide(
-                            first,
-                            second);
-
-            displayResult(result);
-
-        } catch (Exception e) {
-
-            System.out.println(
-                    e.getMessage());
-        }
-    }
-
-    private void displayResult(
-            QuantityMeasurementEntity
-                    entity) {
-
-        System.out.println(entity);
+        return service.add(
+                value1,
+                value2
+        );
     }
 }

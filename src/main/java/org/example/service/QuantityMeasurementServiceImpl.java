@@ -1,181 +1,59 @@
 package org.example.service;
 
-import org.example.dto.QuantityDTO;
-import org.example.entity
-        .QuantityMeasurementEntity;
-import org.example.exception
-        .QuantityMeasurementException;
-import org.example.repository
-        .IQuantityMeasurementRepository;
+import org.example.entity.QuantityMeasurementEntity;
+import org.example.repository.IQuantityMeasurementRepository;
 
 public class QuantityMeasurementServiceImpl
-        implements
-        IQuantityMeasurementService {
+        implements IQuantityMeasurementService {
 
     private final
-    IQuantityMeasurementRepository
-            repository;
+    IQuantityMeasurementRepository repository;
 
-    public
-    QuantityMeasurementServiceImpl(
+    public QuantityMeasurementServiceImpl(
+            IQuantityMeasurementRepository repository) {
 
-            IQuantityMeasurementRepository
-                    repository) {
-
-        this.repository =
-                repository;
+        this.repository = repository;
     }
 
     @Override
-    public QuantityMeasurementEntity
-    compare(
-            QuantityDTO first,
-            QuantityDTO second) {
+    public boolean compare(
+            double value1,
+            double value2) {
 
-        try {
+        boolean result =
+                value1 == value2;
 
-            boolean result =
-                    first.getValue() ==
-                            second.getValue();
-
-            QuantityMeasurementEntity
-                    entity =
-                    new QuantityMeasurementEntity(
-
-                            "COMPARE",
-
-                            first.toString(),
-
-                            second.toString(),
-
-                            String.valueOf(
-                                    result));
-
-            repository.save(entity);
-
-            return entity;
-
-        } catch (Exception e) {
-
-            throw new
-                    QuantityMeasurementException(
-
-                    "Comparison failed",
-                    e);
-        }
-    }
-
-    @Override
-    public QuantityMeasurementEntity
-    convert(
-            QuantityDTO source,
-            String targetUnit) {
-
-        QuantityMeasurementEntity
-                entity =
+        repository.save(
                 new QuantityMeasurementEntity(
+                        "COMPARE",
+                        "LENGTH",
+                        value1,
+                        value2,
+                        String.valueOf(result)
+                )
+        );
 
-                        "CONVERT",
-
-                        source.toString(),
-
-                        targetUnit,
-
-                        "Converted");
-
-        repository.save(entity);
-
-        return entity;
+        return result;
     }
 
     @Override
-    public QuantityMeasurementEntity
-    add(
-            QuantityDTO first,
-            QuantityDTO second) {
+    public double add(
+            double value1,
+            double value2) {
 
         double result =
-                first.getValue() +
-                        second.getValue();
+                value1 + value2;
 
-        QuantityMeasurementEntity
-                entity =
+        repository.save(
                 new QuantityMeasurementEntity(
-
                         "ADD",
+                        "LENGTH",
+                        value1,
+                        value2,
+                        String.valueOf(result)
+                )
+        );
 
-                        first.toString(),
-
-                        second.toString(),
-
-                        String.valueOf(
-                                result));
-
-        repository.save(entity);
-
-        return entity;
-    }
-
-    @Override
-    public QuantityMeasurementEntity
-    subtract(
-            QuantityDTO first,
-            QuantityDTO second) {
-
-        double result =
-                first.getValue() -
-                        second.getValue();
-
-        QuantityMeasurementEntity
-                entity =
-                new QuantityMeasurementEntity(
-
-                        "SUBTRACT",
-
-                        first.toString(),
-
-                        second.toString(),
-
-                        String.valueOf(
-                                result));
-
-        repository.save(entity);
-
-        return entity;
-    }
-
-    @Override
-    public QuantityMeasurementEntity
-    divide(
-            QuantityDTO first,
-            QuantityDTO second) {
-
-        if (second.getValue() == 0) {
-
-            throw new
-                    QuantityMeasurementException(
-                    "Cannot divide by zero");
-        }
-
-        double result =
-                first.getValue() /
-                        second.getValue();
-
-        QuantityMeasurementEntity
-                entity =
-                new QuantityMeasurementEntity(
-
-                        "DIVIDE",
-
-                        first.toString(),
-
-                        second.toString(),
-
-                        String.valueOf(
-                                result));
-
-        repository.save(entity);
-
-        return entity;
+        return result;
     }
 }

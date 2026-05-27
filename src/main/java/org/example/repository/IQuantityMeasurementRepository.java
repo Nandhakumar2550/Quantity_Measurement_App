@@ -1,15 +1,18 @@
 package org.example.repository;
 
-import org.example.entity
-        .QuantityMeasurementEntity;
+import org.example.entity.QuantityMeasurementEntity;
 
 import java.util.List;
 
 public interface IQuantityMeasurementRepository {
 
     void save(
-            QuantityMeasurementEntity entity);
+            QuantityMeasurementEntity entity
+    );
 
-    List<QuantityMeasurementEntity>
-    getAllMeasurements();
+    List<QuantityMeasurementEntity> findAll();
+
+    long getTotalCount();
+
+    void deleteAll();
 }

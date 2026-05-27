@@ -1,75 +1,48 @@
 package org.example.entity;
 
-import java.io.Serializable;
+import java.time.LocalDateTime;
 
-public class QuantityMeasurementEntity
-        implements Serializable {
-
-    private static final long
-            serialVersionUID = 1L;
+public class QuantityMeasurementEntity {
 
     private String operation;
-
-    private String operand1;
-
-    private String operand2;
-
+    private String measurementType;
+    private double value1;
+    private double value2;
     private String result;
-
-    private boolean error;
-
-    private String errorMessage;
-
-    // SUCCESS CONSTRUCTOR
+    private LocalDateTime createdAt;
 
     public QuantityMeasurementEntity(
             String operation,
-            String operand1,
-            String operand2,
+            String measurementType,
+            double value1,
+            double value2,
             String result) {
 
         this.operation = operation;
-        this.operand1 = operand1;
-        this.operand2 = operand2;
+        this.measurementType = measurementType;
+        this.value1 = value1;
+        this.value2 = value2;
         this.result = result;
-        this.error = false;
+        this.createdAt = LocalDateTime.now();
     }
 
-    // ERROR CONSTRUCTOR
-
-    public QuantityMeasurementEntity(
-            String operation,
-            String errorMessage) {
-
-        this.operation = operation;
-        this.errorMessage =
-                errorMessage;
-        this.error = true;
+    public String getOperation() {
+        return operation;
     }
 
-    public boolean hasError() {
-        return error;
+    public String getMeasurementType() {
+        return measurementType;
+    }
+
+    public double getValue1() {
+        return value1;
+    }
+
+    public double getValue2() {
+        return value2;
     }
 
     public String getResult() {
         return result;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    @Override
-    public String toString() {
-
-        if (error) {
-
-            return "ERROR : " +
-                    errorMessage;
-        }
-
-        return operation +
-                " => " +
-                result;
     }
 }
