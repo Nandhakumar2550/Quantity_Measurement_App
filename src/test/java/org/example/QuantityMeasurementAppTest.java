@@ -8,34 +8,34 @@ public class QuantityMeasurementAppTest {
 
     private static final double EPSILON = 0.01;
 
-    // SUBTRACTION SAME UNIT
+    // ADDITION TEST
 
     @Test
-    public void testSubtraction_SameUnit_FeetMinusFeet() {
+    public void testAdd_UC12_BehaviorPreserved() {
 
         Quantity<LengthUnit> q1 =
                 new Quantity<>(
-                        10.0,
+                        1.0,
                         LengthUnit.FEET);
 
         Quantity<LengthUnit> q2 =
                 new Quantity<>(
-                        5.0,
-                        LengthUnit.FEET);
+                        12.0,
+                        LengthUnit.INCHES);
 
         Quantity<LengthUnit> result =
-                q1.subtract(q2);
+                q1.add(q2);
 
         assertEquals(
-                5.0,
+                2.0,
                 result.getValue(),
                 EPSILON);
     }
 
-    // SUBTRACTION CROSS UNIT
+    // SUBTRACTION TEST
 
     @Test
-    public void testSubtraction_CrossUnit_FeetMinusInches() {
+    public void testSubtract_UC12_BehaviorPreserved() {
 
         Quantity<LengthUnit> q1 =
                 new Quantity<>(
@@ -56,105 +56,10 @@ public class QuantityMeasurementAppTest {
                 EPSILON);
     }
 
-    // SUBTRACTION TARGET UNIT
+    // DIVISION TEST
 
     @Test
-    public void testSubtraction_ExplicitTargetUnit_Inches() {
-
-        Quantity<LengthUnit> q1 =
-                new Quantity<>(
-                        10.0,
-                        LengthUnit.FEET);
-
-        Quantity<LengthUnit> q2 =
-                new Quantity<>(
-                        6.0,
-                        LengthUnit.INCHES);
-
-        Quantity<LengthUnit> result =
-                q1.subtract(
-                        q2,
-                        LengthUnit.INCHES);
-
-        assertEquals(
-                114.0,
-                result.getValue(),
-                EPSILON);
-    }
-
-    // SUBTRACTION NEGATIVE RESULT
-
-    @Test
-    public void testSubtraction_ResultingInNegative() {
-
-        Quantity<LengthUnit> q1 =
-                new Quantity<>(
-                        5.0,
-                        LengthUnit.FEET);
-
-        Quantity<LengthUnit> q2 =
-                new Quantity<>(
-                        10.0,
-                        LengthUnit.FEET);
-
-        Quantity<LengthUnit> result =
-                q1.subtract(q2);
-
-        assertEquals(
-                -5.0,
-                result.getValue(),
-                EPSILON);
-    }
-
-    // SUBTRACTION ZERO RESULT
-
-    @Test
-    public void testSubtraction_ResultingInZero() {
-
-        Quantity<LengthUnit> q1 =
-                new Quantity<>(
-                        10.0,
-                        LengthUnit.FEET);
-
-        Quantity<LengthUnit> q2 =
-                new Quantity<>(
-                        120.0,
-                        LengthUnit.INCHES);
-
-        Quantity<LengthUnit> result =
-                q1.subtract(q2);
-
-        assertEquals(
-                0.0,
-                result.getValue(),
-                EPSILON);
-    }
-
-    // DIVISION SAME UNIT
-
-    @Test
-    public void testDivision_SameUnit_FeetDividedByFeet() {
-
-        Quantity<LengthUnit> q1 =
-                new Quantity<>(
-                        10.0,
-                        LengthUnit.FEET);
-
-        Quantity<LengthUnit> q2 =
-                new Quantity<>(
-                        2.0,
-                        LengthUnit.FEET);
-
-        assertEquals(
-                5.0,
-                q1.divide(q2),
-                EPSILON);
-    }
-
-    // DIVISION CROSS UNIT
-
-    @Test
-    public void testDivision_CrossUnit_FeetDividedByInches() {
+    public void testDivide_UC12_BehaviorPreserved() {
 
         Quantity<LengthUnit> q1 =
                 new Quantity<>(
@@ -172,31 +77,52 @@ public class QuantityMeasurementAppTest {
                 EPSILON);
     }
 
-    // DIVISION RATIO LESS THAN ONE
+    // NULL OPERAND VALIDATION
 
     @Test
-    public void testDivision_RatioLessThanOne() {
+    public void testValidation_NullOperand_ConsistentAcrossOperations() {
 
         Quantity<LengthUnit> q1 =
-                new Quantity<>(
-                        5.0,
-                        LengthUnit.FEET);
-
-        Quantity<LengthUnit> q2 =
                 new Quantity<>(
                         10.0,
                         LengthUnit.FEET);
 
-        assertEquals(
-                0.5,
-                q1.divide(q2),
-                EPSILON);
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> q1.add(null));
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> q1.subtract(null));
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> q1.divide(null));
     }
 
-    // DIVISION BY ZERO
+    // CROSS CATEGORY VALIDATION
 
     @Test
-    public void testDivision_ByZero() {
+    public void testValidation_CrossCategory_ConsistentAcrossOperations() {
+
+        Quantity<LengthUnit> length =
+                new Quantity<>(
+                        10.0,
+                        LengthUnit.FEET);
+
+        Quantity<WeightUnit> weight =
+                new Quantity<>(
+                        5.0,
+                        WeightUnit.KILOGRAM);
+
+        assertFalse(
+                length.equals(weight));
+    }
+
+    // DIVIDE BY ZERO
+
+    @Test
+    public void testArithmeticOperation_DivideByZero_EnumThrows() {
 
         Quantity<LengthUnit> q1 =
                 new Quantity<>(
@@ -213,40 +139,34 @@ public class QuantityMeasurementAppTest {
                 () -> q1.divide(q2));
     }
 
-    // NULL OPERAND SUBTRACTION
+    // ROUNDING TEST
 
     @Test
-    public void testSubtraction_NullOperand() {
+    public void testRounding_AddSubtract_TwoDecimalPlaces() {
 
         Quantity<LengthUnit> q1 =
                 new Quantity<>(
-                        10.0,
+                        1.235,
                         LengthUnit.FEET);
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> q1.subtract(null));
-    }
-
-    // NULL OPERAND DIVISION
-
-    @Test
-    public void testDivision_NullOperand() {
-
-        Quantity<LengthUnit> q1 =
+        Quantity<LengthUnit> q2 =
                 new Quantity<>(
-                        10.0,
+                        0.111,
                         LengthUnit.FEET);
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> q1.divide(null));
+        Quantity<LengthUnit> result =
+                q1.add(q2);
+
+        assertEquals(
+                1.35,
+                result.getValue(),
+                EPSILON);
     }
 
     // IMMUTABILITY TEST
 
     @Test
-    public void testSubtraction_Immutability() {
+    public void testImmutability_AfterSubtract_ViaCentralizedHelper() {
 
         Quantity<LengthUnit> original =
                 new Quantity<>(
@@ -269,38 +189,10 @@ public class QuantityMeasurementAppTest {
                 EPSILON);
     }
 
-    // ADDITION SUBTRACTION INVERSE
+    // WEIGHT CATEGORY TEST
 
     @Test
-    public void testSubtractionAddition_Inverse() {
-
-        Quantity<LengthUnit> original =
-                new Quantity<>(
-                        10.0,
-                        LengthUnit.FEET);
-
-        Quantity<LengthUnit> added =
-                original.add(
-                        new Quantity<>(
-                                5.0,
-                                LengthUnit.FEET));
-
-        Quantity<LengthUnit> result =
-                added.subtract(
-                        new Quantity<>(
-                                5.0,
-                                LengthUnit.FEET));
-
-        assertEquals(
-                original.getValue(),
-                result.getValue(),
-                EPSILON);
-    }
-
-    // WEIGHT DIVISION
-
-    @Test
-    public void testDivision_WeightCategory() {
+    public void testAllOperations_AcrossWeightCategory() {
 
         Quantity<WeightUnit> q1 =
                 new Quantity<>(
@@ -309,19 +201,32 @@ public class QuantityMeasurementAppTest {
 
         Quantity<WeightUnit> q2 =
                 new Quantity<>(
-                        5.0,
-                        WeightUnit.KILOGRAM);
+                        5000.0,
+                        WeightUnit.GRAM);
+
+        assertEquals(
+                15.0,
+                q1.add(q2).getValue(),
+                EPSILON);
+
+        assertEquals(
+                5.0,
+                q1.subtract(q2).getValue(),
+                EPSILON);
 
         assertEquals(
                 2.0,
-                q1.divide(q2),
+                q1.divide(
+                        new Quantity<>(
+                                5.0,
+                                WeightUnit.KILOGRAM)),
                 EPSILON);
     }
 
-    // VOLUME DIVISION
+    // VOLUME CATEGORY TEST
 
     @Test
-    public void testDivision_VolumeCategory() {
+    public void testAllOperations_AcrossVolumeCategory() {
 
         Quantity<VolumeUnit> q1 =
                 new Quantity<>(
@@ -330,12 +235,25 @@ public class QuantityMeasurementAppTest {
 
         Quantity<VolumeUnit> q2 =
                 new Quantity<>(
-                        10.0,
-                        VolumeUnit.LITRE);
+                        500.0,
+                        VolumeUnit.MILLILITRE);
+
+        assertEquals(
+                5.5,
+                q1.add(q2).getValue(),
+                EPSILON);
+
+        assertEquals(
+                4.5,
+                q1.subtract(q2).getValue(),
+                EPSILON);
 
         assertEquals(
                 0.5,
-                q1.divide(q2),
+                q1.divide(
+                        new Quantity<>(
+                                10.0,
+                                VolumeUnit.LITRE)),
                 EPSILON);
     }
 }

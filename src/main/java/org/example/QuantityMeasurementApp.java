@@ -2,7 +2,23 @@ package org.example;
 
 public class QuantityMeasurementApp {
 
-    // DEMONSTRATE SUBTRACTION
+    // ADDITION DEMO
+
+    public static <U extends IMeasurable>
+    void demonstrateAddition(
+            Quantity<U> q1,
+            Quantity<U> q2,
+            U targetUnit) {
+
+        System.out.println(
+                q1 + " + " +
+                        q2 + " = " +
+                        q1.add(
+                                q2,
+                                targetUnit));
+    }
+
+    // SUBTRACTION DEMO
 
     public static <U extends IMeasurable>
     void demonstrateSubtraction(
@@ -18,7 +34,7 @@ public class QuantityMeasurementApp {
                                 targetUnit));
     }
 
-    // DEMONSTRATE DIVISION
+    // DIVISION DEMO
 
     public static <U extends IMeasurable>
     void demonstrateDivision(
@@ -35,8 +51,6 @@ public class QuantityMeasurementApp {
 
     public static void main(String[] args) {
 
-        // LENGTH SUBTRACTION
-
         Quantity<LengthUnit> feet =
                 new Quantity<>(
                         10.0,
@@ -46,6 +60,11 @@ public class QuantityMeasurementApp {
                 new Quantity<>(
                         6.0,
                         LengthUnit.INCHES);
+
+        demonstrateAddition(
+                feet,
+                inches,
+                LengthUnit.FEET);
 
         demonstrateSubtraction(
                 feet,
@@ -61,8 +80,6 @@ public class QuantityMeasurementApp {
                         2.0,
                         LengthUnit.FEET));
 
-        // WEIGHT SUBTRACTION
-
         Quantity<WeightUnit> kilogram =
                 new Quantity<>(
                         10.0,
@@ -72,6 +89,11 @@ public class QuantityMeasurementApp {
                 new Quantity<>(
                         5000.0,
                         WeightUnit.GRAM);
+
+        demonstrateAddition(
+                kilogram,
+                gram,
+                WeightUnit.GRAM);
 
         demonstrateSubtraction(
                 kilogram,
@@ -83,8 +105,6 @@ public class QuantityMeasurementApp {
                 new Quantity<>(
                         5.0,
                         WeightUnit.KILOGRAM));
-
-        // VOLUME SUBTRACTION
 
         Quantity<VolumeUnit> litre =
                 new Quantity<>(
