@@ -5,7 +5,8 @@ import java.util.function.DoubleBinaryOperator;
 
 public class Quantity<U extends IMeasurable> {
 
-    private static final double EPSILON = 0.0001;
+    private static final double EPSILON =
+            0.0001;
 
     private final double value;
 
@@ -28,7 +29,8 @@ public class Quantity<U extends IMeasurable> {
             return a / b;
         });
 
-        private final DoubleBinaryOperator operation;
+        private final DoubleBinaryOperator
+                operation;
 
         ArithmeticOperation(
                 DoubleBinaryOperator operation) {
@@ -73,11 +75,12 @@ public class Quantity<U extends IMeasurable> {
         return unit;
     }
 
-    // BASE UNIT CONVERSION
+    // BASE UNIT
 
     private double toBaseUnit() {
 
-        return unit.convertToBaseUnit(value);
+        return unit.convertToBaseUnit(
+                value);
     }
 
     // ROUNDING HELPER
@@ -94,7 +97,8 @@ public class Quantity<U extends IMeasurable> {
     private void validateArithmeticOperands(
             Quantity<U> other,
             U targetUnit,
-            boolean targetUnitRequired) {
+            boolean targetUnitRequired,
+            String operation) {
 
         if (other == null)
             throw new IllegalArgumentException(
@@ -114,9 +118,14 @@ public class Quantity<U extends IMeasurable> {
                 targetUnit == null)
             throw new IllegalArgumentException(
                     "Target unit cannot be null");
+
+        // OPERATION VALIDATION
+
+        this.unit.validateOperationSupport(
+                operation);
     }
 
-    // CENTRALIZED ARITHMETIC HELPER
+    // CENTRALIZED ARITHMETIC
 
     private double performBaseArithmetic(
             Quantity<U> other,
@@ -166,7 +175,8 @@ public class Quantity<U extends IMeasurable> {
         validateArithmeticOperands(
                 other,
                 null,
-                false);
+                false,
+                "addition");
 
         double sumBase =
                 performBaseArithmetic(
@@ -177,42 +187,10 @@ public class Quantity<U extends IMeasurable> {
                 unit.convertFromBaseUnit(
                         sumBase);
 
-        resultValue =
-                roundToTwoDecimals(
-                        resultValue);
-
         return new Quantity<>(
-                resultValue,
+                roundToTwoDecimals(
+                        resultValue),
                 unit);
-    }
-
-    // ADD METHOD WITH TARGET UNIT
-
-    public Quantity<U> add(
-            Quantity<U> other,
-            U targetUnit) {
-
-        validateArithmeticOperands(
-                other,
-                targetUnit,
-                true);
-
-        double sumBase =
-                performBaseArithmetic(
-                        other,
-                        ArithmeticOperation.ADD);
-
-        double resultValue =
-                targetUnit.convertFromBaseUnit(
-                        sumBase);
-
-        resultValue =
-                roundToTwoDecimals(
-                        resultValue);
-
-        return new Quantity<>(
-                resultValue,
-                targetUnit);
     }
 
     // SUBTRACT METHOD
@@ -223,7 +201,8 @@ public class Quantity<U extends IMeasurable> {
         validateArithmeticOperands(
                 other,
                 null,
-                false);
+                false,
+                "subtraction");
 
         double differenceBase =
                 performBaseArithmetic(
@@ -234,42 +213,10 @@ public class Quantity<U extends IMeasurable> {
                 unit.convertFromBaseUnit(
                         differenceBase);
 
-        resultValue =
-                roundToTwoDecimals(
-                        resultValue);
-
         return new Quantity<>(
-                resultValue,
+                roundToTwoDecimals(
+                        resultValue),
                 unit);
-    }
-
-    // SUBTRACT METHOD WITH TARGET UNIT
-
-    public Quantity<U> subtract(
-            Quantity<U> other,
-            U targetUnit) {
-
-        validateArithmeticOperands(
-                other,
-                targetUnit,
-                true);
-
-        double differenceBase =
-                performBaseArithmetic(
-                        other,
-                        ArithmeticOperation.SUBTRACT);
-
-        double resultValue =
-                targetUnit.convertFromBaseUnit(
-                        differenceBase);
-
-        resultValue =
-                roundToTwoDecimals(
-                        resultValue);
-
-        return new Quantity<>(
-                resultValue,
-                targetUnit);
     }
 
     // DIVIDE METHOD
@@ -280,7 +227,8 @@ public class Quantity<U extends IMeasurable> {
         validateArithmeticOperands(
                 other,
                 null,
-                false);
+                false,
+                "division");
 
         return performBaseArithmetic(
                 other,
@@ -316,7 +264,7 @@ public class Quantity<U extends IMeasurable> {
         return difference < EPSILON;
     }
 
-    // HASHCODE METHOD
+    // HASHCODE
 
     @Override
     public int hashCode() {
@@ -326,7 +274,7 @@ public class Quantity<U extends IMeasurable> {
                         toBaseUnit() * 1000));
     }
 
-    // TOSTRING METHOD
+    // TOSTRING
 
     @Override
     public String toString() {

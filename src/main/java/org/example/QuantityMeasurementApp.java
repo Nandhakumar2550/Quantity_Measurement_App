@@ -2,129 +2,57 @@ package org.example;
 
 public class QuantityMeasurementApp {
 
-    // ADDITION DEMO
-
-    public static <U extends IMeasurable>
-    void demonstrateAddition(
-            Quantity<U> q1,
-            Quantity<U> q2,
-            U targetUnit) {
-
-        System.out.println(
-                q1 + " + " +
-                        q2 + " = " +
-                        q1.add(
-                                q2,
-                                targetUnit));
-    }
-
-    // SUBTRACTION DEMO
-
-    public static <U extends IMeasurable>
-    void demonstrateSubtraction(
-            Quantity<U> q1,
-            Quantity<U> q2,
-            U targetUnit) {
-
-        System.out.println(
-                q1 + " - " +
-                        q2 + " = " +
-                        q1.subtract(
-                                q2,
-                                targetUnit));
-    }
-
-    // DIVISION DEMO
-
-    public static <U extends IMeasurable>
-    void demonstrateDivision(
-            Quantity<U> q1,
-            Quantity<U> q2) {
-
-        System.out.println(
-                q1 + " / " +
-                        q2 + " = " +
-                        q1.divide(q2));
-    }
-
-    // MAIN METHOD
-
     public static void main(String[] args) {
 
-        Quantity<LengthUnit> feet =
+        // TEMPERATURE EQUALITY
+
+        Quantity<TemperatureUnit> celsius =
                 new Quantity<>(
-                        10.0,
-                        LengthUnit.FEET);
+                        0.0,
+                        TemperatureUnit.CELSIUS);
 
-        Quantity<LengthUnit> inches =
+        Quantity<TemperatureUnit> fahrenheit =
                 new Quantity<>(
-                        6.0,
-                        LengthUnit.INCHES);
+                        32.0,
+                        TemperatureUnit.FAHRENHEIT);
 
-        demonstrateAddition(
-                feet,
-                inches,
-                LengthUnit.FEET);
+        System.out.println(
+                celsius.equals(
+                        fahrenheit));
 
-        demonstrateSubtraction(
-                feet,
-                inches,
-                LengthUnit.FEET);
+        // TEMPERATURE CONVERSION
 
-        demonstrateDivision(
+        Quantity<TemperatureUnit> boiling =
                 new Quantity<>(
-                        24.0,
-                        LengthUnit.INCHES),
+                        100.0,
+                        TemperatureUnit.CELSIUS);
 
-                new Quantity<>(
-                        2.0,
-                        LengthUnit.FEET));
+        System.out.println(
+                boiling.convertTo(
+                        TemperatureUnit.FAHRENHEIT));
 
-        Quantity<WeightUnit> kilogram =
-                new Quantity<>(
-                        10.0,
-                        WeightUnit.KILOGRAM);
+        // UNSUPPORTED OPERATION
 
-        Quantity<WeightUnit> gram =
-                new Quantity<>(
-                        5000.0,
-                        WeightUnit.GRAM);
+        try {
 
-        demonstrateAddition(
-                kilogram,
-                gram,
-                WeightUnit.GRAM);
+            Quantity<TemperatureUnit> t1 =
+                    new Quantity<>(
+                            100.0,
+                            TemperatureUnit.CELSIUS);
 
-        demonstrateSubtraction(
-                kilogram,
-                gram,
-                WeightUnit.KILOGRAM);
+            Quantity<TemperatureUnit> t2 =
+                    new Quantity<>(
+                            50.0,
+                            TemperatureUnit.CELSIUS);
 
-        demonstrateDivision(
-                kilogram,
-                new Quantity<>(
-                        5.0,
-                        WeightUnit.KILOGRAM));
+            System.out.println(
+                    t1.add(t2));
 
-        Quantity<VolumeUnit> litre =
-                new Quantity<>(
-                        5.0,
-                        VolumeUnit.LITRE);
+        } catch (
+                UnsupportedOperationException e) {
 
-        Quantity<VolumeUnit> millilitre =
-                new Quantity<>(
-                        500.0,
-                        VolumeUnit.MILLILITRE);
-
-        demonstrateSubtraction(
-                litre,
-                millilitre,
-                VolumeUnit.LITRE);
-
-        demonstrateDivision(
-                litre,
-                new Quantity<>(
-                        10.0,
-                        VolumeUnit.LITRE));
+            System.out.println(
+                    e.getMessage());
+        }
     }
 }

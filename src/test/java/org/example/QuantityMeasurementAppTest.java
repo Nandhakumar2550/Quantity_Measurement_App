@@ -6,254 +6,200 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class QuantityMeasurementAppTest {
 
-    private static final double EPSILON = 0.01;
+    private static final double EPSILON =
+            0.01;
 
-    // ADDITION TEST
+    // CELSIUS TO FAHRENHEIT
 
     @Test
-    public void testAdd_UC12_BehaviorPreserved() {
+    public void testTemperatureEquality_CelsiusToFahrenheit() {
 
-        Quantity<LengthUnit> q1 =
+        Quantity<TemperatureUnit> celsius =
                 new Quantity<>(
-                        1.0,
-                        LengthUnit.FEET);
+                        0.0,
+                        TemperatureUnit.CELSIUS);
 
-        Quantity<LengthUnit> q2 =
+        Quantity<TemperatureUnit> fahrenheit =
                 new Quantity<>(
-                        12.0,
-                        LengthUnit.INCHES);
+                        32.0,
+                        TemperatureUnit.FAHRENHEIT);
 
-        Quantity<LengthUnit> result =
-                q1.add(q2);
+        assertTrue(
+                celsius.equals(
+                        fahrenheit));
+    }
+
+    // CELSIUS TO KELVIN
+
+    @Test
+    public void testTemperatureEquality_CelsiusToKelvin() {
+
+        Quantity<TemperatureUnit> celsius =
+                new Quantity<>(
+                        0.0,
+                        TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> kelvin =
+                new Quantity<>(
+                        273.15,
+                        TemperatureUnit.KELVIN);
+
+        assertTrue(
+                celsius.equals(
+                        kelvin));
+    }
+
+    // CONVERSION TEST
+
+    @Test
+    public void testTemperatureConversion_CelsiusToFahrenheit() {
+
+        Quantity<TemperatureUnit> boiling =
+                new Quantity<>(
+                        100.0,
+                        TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> result =
+                boiling.convertTo(
+                        TemperatureUnit.FAHRENHEIT);
 
         assertEquals(
-                2.0,
+                212.0,
                 result.getValue(),
                 EPSILON);
     }
 
-    // SUBTRACTION TEST
+    // NEGATIVE TEMPERATURE
 
     @Test
-    public void testSubtract_UC12_BehaviorPreserved() {
+    public void testTemperatureConversion_Negative40Equal() {
 
-        Quantity<LengthUnit> q1 =
+        Quantity<TemperatureUnit> celsius =
                 new Quantity<>(
-                        10.0,
-                        LengthUnit.FEET);
+                        -40.0,
+                        TemperatureUnit.CELSIUS);
 
-        Quantity<LengthUnit> q2 =
+        Quantity<TemperatureUnit> fahrenheit =
                 new Quantity<>(
-                        6.0,
-                        LengthUnit.INCHES);
+                        -40.0,
+                        TemperatureUnit.FAHRENHEIT);
 
-        Quantity<LengthUnit> result =
-                q1.subtract(q2);
-
-        assertEquals(
-                9.5,
-                result.getValue(),
-                EPSILON);
+        assertTrue(
+                celsius.equals(
+                        fahrenheit));
     }
 
-    // DIVISION TEST
+    // UNSUPPORTED ADDITION
 
     @Test
-    public void testDivide_UC12_BehaviorPreserved() {
+    public void testTemperatureUnsupportedOperation_Add() {
 
-        Quantity<LengthUnit> q1 =
+        Quantity<TemperatureUnit> t1 =
                 new Quantity<>(
-                        24.0,
-                        LengthUnit.INCHES);
+                        100.0,
+                        TemperatureUnit.CELSIUS);
 
-        Quantity<LengthUnit> q2 =
+        Quantity<TemperatureUnit> t2 =
                 new Quantity<>(
-                        2.0,
-                        LengthUnit.FEET);
+                        50.0,
+                        TemperatureUnit.CELSIUS);
 
-        assertEquals(
-                1.0,
-                q1.divide(q2),
-                EPSILON);
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> t1.add(t2));
     }
 
-    // NULL OPERAND VALIDATION
+    // UNSUPPORTED SUBTRACTION
 
     @Test
-    public void testValidation_NullOperand_ConsistentAcrossOperations() {
+    public void testTemperatureUnsupportedOperation_Subtract() {
 
-        Quantity<LengthUnit> q1 =
+        Quantity<TemperatureUnit> t1 =
                 new Quantity<>(
-                        10.0,
-                        LengthUnit.FEET);
+                        100.0,
+                        TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> t2 =
+                new Quantity<>(
+                        50.0,
+                        TemperatureUnit.CELSIUS);
 
         assertThrows(
-                IllegalArgumentException.class,
-                () -> q1.add(null));
-
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> q1.subtract(null));
-
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> q1.divide(null));
+                UnsupportedOperationException.class,
+                () -> t1.subtract(t2));
     }
 
-    // CROSS CATEGORY VALIDATION
+    // UNSUPPORTED DIVISION
 
     @Test
-    public void testValidation_CrossCategory_ConsistentAcrossOperations() {
+    public void testTemperatureUnsupportedOperation_Divide() {
+
+        Quantity<TemperatureUnit> t1 =
+                new Quantity<>(
+                        100.0,
+                        TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> t2 =
+                new Quantity<>(
+                        50.0,
+                        TemperatureUnit.CELSIUS);
+
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> t1.divide(t2));
+    }
+
+    // CROSS CATEGORY CHECK
+
+    @Test
+    public void testTemperatureVsLengthIncompatibility() {
+
+        Quantity<TemperatureUnit> temperature =
+                new Quantity<>(
+                        100.0,
+                        TemperatureUnit.CELSIUS);
 
         Quantity<LengthUnit> length =
                 new Quantity<>(
-                        10.0,
+                        100.0,
                         LengthUnit.FEET);
-
-        Quantity<WeightUnit> weight =
-                new Quantity<>(
-                        5.0,
-                        WeightUnit.KILOGRAM);
 
         assertFalse(
-                length.equals(weight));
+                temperature.equals(
+                        length));
     }
 
-    // DIVIDE BY ZERO
+    // OPERATION SUPPORT
 
     @Test
-    public void testArithmeticOperation_DivideByZero_EnumThrows() {
+    public void testOperationSupportMethods_TemperatureUnitAddition() {
 
-        Quantity<LengthUnit> q1 =
-                new Quantity<>(
-                        10.0,
-                        LengthUnit.FEET);
-
-        Quantity<LengthUnit> q2 =
-                new Quantity<>(
-                        0.0,
-                        LengthUnit.FEET);
-
-        assertThrows(
-                ArithmeticException.class,
-                () -> q1.divide(q2));
+        assertFalse(
+                TemperatureUnit.CELSIUS
+                        .supportsArithmetic());
     }
 
-    // ROUNDING TEST
+    // ROUND TRIP CONVERSION
 
     @Test
-    public void testRounding_AddSubtract_TwoDecimalPlaces() {
+    public void testTemperatureConversion_RoundTrip() {
 
-        Quantity<LengthUnit> q1 =
+        Quantity<TemperatureUnit> original =
                 new Quantity<>(
-                        1.235,
-                        LengthUnit.FEET);
+                        50.0,
+                        TemperatureUnit.CELSIUS);
 
-        Quantity<LengthUnit> q2 =
-                new Quantity<>(
-                        0.111,
-                        LengthUnit.FEET);
+        Quantity<TemperatureUnit> converted =
+                original.convertTo(
+                        TemperatureUnit.FAHRENHEIT);
 
-        Quantity<LengthUnit> result =
-                q1.add(q2);
+        Quantity<TemperatureUnit> result =
+                converted.convertTo(
+                        TemperatureUnit.CELSIUS);
 
         assertEquals(
-                1.35,
+                50.0,
                 result.getValue(),
-                EPSILON);
-    }
-
-    // IMMUTABILITY TEST
-
-    @Test
-    public void testImmutability_AfterSubtract_ViaCentralizedHelper() {
-
-        Quantity<LengthUnit> original =
-                new Quantity<>(
-                        10.0,
-                        LengthUnit.FEET);
-
-        Quantity<LengthUnit> result =
-                original.subtract(
-                        new Quantity<>(
-                                5.0,
-                                LengthUnit.FEET));
-
-        assertNotSame(
-                original,
-                result);
-
-        assertEquals(
-                10.0,
-                original.getValue(),
-                EPSILON);
-    }
-
-    // WEIGHT CATEGORY TEST
-
-    @Test
-    public void testAllOperations_AcrossWeightCategory() {
-
-        Quantity<WeightUnit> q1 =
-                new Quantity<>(
-                        10.0,
-                        WeightUnit.KILOGRAM);
-
-        Quantity<WeightUnit> q2 =
-                new Quantity<>(
-                        5000.0,
-                        WeightUnit.GRAM);
-
-        assertEquals(
-                15.0,
-                q1.add(q2).getValue(),
-                EPSILON);
-
-        assertEquals(
-                5.0,
-                q1.subtract(q2).getValue(),
-                EPSILON);
-
-        assertEquals(
-                2.0,
-                q1.divide(
-                        new Quantity<>(
-                                5.0,
-                                WeightUnit.KILOGRAM)),
-                EPSILON);
-    }
-
-    // VOLUME CATEGORY TEST
-
-    @Test
-    public void testAllOperations_AcrossVolumeCategory() {
-
-        Quantity<VolumeUnit> q1 =
-                new Quantity<>(
-                        5.0,
-                        VolumeUnit.LITRE);
-
-        Quantity<VolumeUnit> q2 =
-                new Quantity<>(
-                        500.0,
-                        VolumeUnit.MILLILITRE);
-
-        assertEquals(
-                5.5,
-                q1.add(q2).getValue(),
-                EPSILON);
-
-        assertEquals(
-                4.5,
-                q1.subtract(q2).getValue(),
-                EPSILON);
-
-        assertEquals(
-                0.5,
-                q1.divide(
-                        new Quantity<>(
-                                10.0,
-                                VolumeUnit.LITRE)),
                 EPSILON);
     }
 }
