@@ -1,58 +1,79 @@
 package org.example;
 
+import org.example.controller.QuantityMeasurementController;
+
+import org.example.dto.QuantityDTO;
+
+import org.example.repository.QuantityMeasurementCacheRepository;
+
+import org.example.service.IQuantityMeasurementService;
+
+import org.example.service.QuantityMeasurementServiceImpl;
+
 public class QuantityMeasurementApp {
 
-    public static void main(String[] args) {
+    public static void main(
+            String[] args) {
 
-        // TEMPERATURE EQUALITY
+        // REPOSITORY
 
-        Quantity<TemperatureUnit> celsius =
-                new Quantity<>(
-                        0.0,
-                        TemperatureUnit.CELSIUS);
+        QuantityMeasurementCacheRepository
+                repository =
+                QuantityMeasurementCacheRepository
+                        .getInstance();
 
-        Quantity<TemperatureUnit> fahrenheit =
-                new Quantity<>(
-                        32.0,
-                        TemperatureUnit.FAHRENHEIT);
+        // SERVICE
 
-        System.out.println(
-                celsius.equals(
-                        fahrenheit));
+        IQuantityMeasurementService
+                service =
+                new QuantityMeasurementServiceImpl(
+                        repository);
 
-        // TEMPERATURE CONVERSION
+        // CONTROLLER
 
-        Quantity<TemperatureUnit> boiling =
-                new Quantity<>(
+        QuantityMeasurementController
+                controller =
+                new QuantityMeasurementController(
+                        service);
+
+        // DTO OBJECTS
+
+        QuantityDTO feet1 =
+                new QuantityDTO(
+                        1.0,
+                        "FEET",
+                        "LENGTH");
+
+        QuantityDTO feet2 =
+                new QuantityDTO(
+                        1.0,
+                        "FEET",
+                        "LENGTH");
+
+        QuantityDTO temperature1 =
+                new QuantityDTO(
                         100.0,
-                        TemperatureUnit.CELSIUS);
+                        "CELSIUS",
+                        "TEMPERATURE");
 
-        System.out.println(
-                boiling.convertTo(
-                        TemperatureUnit.FAHRENHEIT));
+        QuantityDTO temperature2 =
+                new QuantityDTO(
+                        50.0,
+                        "CELSIUS",
+                        "TEMPERATURE");
 
-        // UNSUPPORTED OPERATION
+        // OPERATIONS
 
-        try {
+        controller.performComparison(
+                feet1,
+                feet2);
 
-            Quantity<TemperatureUnit> t1 =
-                    new Quantity<>(
-                            100.0,
-                            TemperatureUnit.CELSIUS);
+        controller.performAddition(
+                feet1,
+                feet2);
 
-            Quantity<TemperatureUnit> t2 =
-                    new Quantity<>(
-                            50.0,
-                            TemperatureUnit.CELSIUS);
-
-            System.out.println(
-                    t1.add(t2));
-
-        } catch (
-                UnsupportedOperationException e) {
-
-            System.out.println(
-                    e.getMessage());
-        }
+        controller.performDivision(
+                temperature1,
+                temperature2);
     }
 }

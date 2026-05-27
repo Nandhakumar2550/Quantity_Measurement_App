@@ -1,4 +1,4 @@
-package org.example;
+package org.example.measurable;
 
 import java.util.function.Function;
 
@@ -15,10 +15,12 @@ public enum TemperatureUnit
     FAHRENHEIT(
 
             fahrenheit ->
-                    (fahrenheit - 32) * 5 / 9,
+                    (fahrenheit - 32)
+                            * 5 / 9,
 
             celsius ->
-                    (celsius * 9 / 5) + 32
+                    (celsius * 9 / 5)
+                            + 32
     ),
 
     KELVIN(
@@ -30,21 +32,18 @@ public enum TemperatureUnit
                     celsius + 273.15
     );
 
-    // FUNCTIONAL INTERFACES
-
-    private final Function<Double, Double>
+    private final
+    Function<Double, Double>
             toCelsiusConverter;
 
-    private final Function<Double, Double>
+    private final
+    Function<Double, Double>
             fromCelsiusConverter;
 
-    // LAMBDA FOR ARITHMETIC SUPPORT
-
-    private final SupportsArithmetic
+    private final
+    SupportsArithmetic
             supportsArithmetic =
             () -> false;
-
-    // CONSTRUCTOR
 
     TemperatureUnit(
 
@@ -61,61 +60,62 @@ public enum TemperatureUnit
                 fromCelsiusConverter;
     }
 
-    // CONVERSION FACTOR
-
     @Override
-    public double getConversionFactor() {
+    public double
+    getConversionFactor() {
 
         return 1.0;
     }
 
-    // CONVERT TO BASE UNIT
-
     @Override
-    public double convertToBaseUnit(
+    public double
+    convertToBaseUnit(
             double value) {
 
         return toCelsiusConverter
                 .apply(value);
     }
 
-    // CONVERT FROM BASE UNIT
-
     @Override
-    public double convertFromBaseUnit(
+    public double
+    convertFromBaseUnit(
             double baseValue) {
 
         return fromCelsiusConverter
                 .apply(baseValue);
     }
 
-    // UNIT NAME
-
     @Override
-    public String getUnitName() {
+    public String
+    getUnitName() {
 
         return name();
     }
 
-    // SUPPORTS ARITHMETIC
+    @Override
+    public String
+    getMeasurementType() {
+
+        return "TEMPERATURE";
+    }
 
     @Override
-    public boolean supportsArithmetic() {
+    public boolean
+    supportsArithmetic() {
 
         return supportsArithmetic
                 .isSupported();
     }
 
-    // VALIDATE OPERATION SUPPORT
-
     @Override
-    public void validateOperationSupport(
+    public void
+    validateOperationSupport(
             String operation) {
 
-        throw new UnsupportedOperationException(
+        throw new
+                UnsupportedOperationException(
 
                 "Temperature does not support "
-                        + operation +
-                        " operation");
+                        + operation);
     }
 }

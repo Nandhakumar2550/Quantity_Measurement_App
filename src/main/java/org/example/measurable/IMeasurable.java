@@ -1,32 +1,31 @@
-package org.example;
+package org.example.measurable;
 
 public interface IMeasurable {
-
-    // DEFAULT LAMBDA
 
     SupportsArithmetic supportsArithmetic =
             () -> true;
 
-    // ABSTRACT METHODS
-
     double getConversionFactor();
 
-    double convertToBaseUnit(double value);
+    double convertToBaseUnit(
+            double value);
 
-    double convertFromBaseUnit(double baseValue);
+    double convertFromBaseUnit(
+            double baseValue);
 
     String getUnitName();
 
-    // DEFAULT METHODS
+    String getMeasurementType();
 
     default boolean supportsArithmetic() {
 
-        return supportsArithmetic.isSupported();
+        return supportsArithmetic
+                .isSupported();
     }
 
     default void validateOperationSupport(
             String operation) {
 
-        // DEFAULT IMPLEMENTATION
+        // DEFAULT
     }
 }
