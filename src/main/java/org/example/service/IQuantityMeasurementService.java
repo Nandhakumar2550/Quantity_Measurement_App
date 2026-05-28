@@ -1,14 +1,49 @@
 package org.example.service;
 
+import org.example.dto.*;
+
+import java.util.List;
+
 public interface IQuantityMeasurementService {
 
-    boolean compare(
-            double value1,
-            double value2
+    QuantityMeasurementDTO compare(
+            QuantityInputDTO inputDTO
     );
 
-    double add(
-            double value1,
-            double value2
+    QuantityMeasurementDTO convert(
+            QuantityInputDTO inputDTO
+    );
+
+    QuantityMeasurementDTO add(
+            QuantityInputDTO inputDTO
+    );
+
+    QuantityMeasurementDTO subtract(
+            QuantityInputDTO inputDTO
+    );
+
+    QuantityMeasurementDTO multiply(
+            QuantityInputDTO inputDTO
+    );
+
+    QuantityMeasurementDTO divide(
+            QuantityInputDTO inputDTO
+    );
+
+    List<QuantityMeasurementDTO>
+    getHistoryByOperation(
+            String operation
+    );
+
+    List<QuantityMeasurementDTO>
+    getHistoryByType(
+            String type
+    );
+
+    List<QuantityMeasurementDTO>
+    getErroredHistory();
+
+    long getCount(
+            String operation
     );
 }
